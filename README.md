@@ -10,9 +10,15 @@ Clone this repo
 git clone https://github.com/Srustika-18/VirtualAssistant.git
 ```
 
-Install FFmpeg from this ![link](<[https://github.com/Srustika-18/VirtualAssistant.git](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip)>)
+Download FFmpeg from this ![link](<[https://github.com/Srustika-18/VirtualAssistant.git](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip)>)
 
-Unzip and keep the folder inside the main directory.
+> Unzip and keep the folder inside the main directory.
+
+Change directory to VirtualAssistant
+
+```bash
+cd VirtualAssistant
+```
 
 > Ensure that python is installed on your system
 
@@ -31,27 +37,27 @@ python main.py
 ## Usage
 
 -   Ask to play a song
-> play Attention by Charlie Puth
+    > play Attention by Charlie Puth
 -   Ask to play a video on youtube
-> play Attention by Charlie Puth on youtube
+    > play Attention by Charlie Puth on youtube
 -   Ask about weather
-> what is the weather today ?
+    > what is the weather today ?
 -   Ask about news
-> what is news today ?
+    > what is news today ?
 -   Ask about date
-> what's the date ?
+    > what's the date ?
 -   Ask about time
-> what's the time ?
+    > what's the time ?
 -   Search on Google, Youtube & Wikipedia
-> Search Attention on google
+    > Search Attention on google
 -   Open Google, Youtube & Whatsapp
-> Open Youtube
+    > Open Youtube
 -   Ask a joke
-> Tell me a Joke
+    > Tell me a Joke
 -   Ask for an Insult
-> Insult me
+    > Insult me
 -   Say after me
-> Say All is well
+    > Say All is well
 
 ## Contributing
 
