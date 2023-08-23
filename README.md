@@ -30,14 +30,28 @@ python main.py
 
 ## Usage
 
+-   Ask to play a song
+> play Attention by Charlie Puth
+-   Ask to play a video on youtube
+> play Attention by Charlie Puth on youtube
 -   Ask about weather
+> what is the weather today ?
 -   Ask about news
+> what is news today ?
 -   Ask about date
+> what's the date ?
 -   Ask about time
+> what's the time ?
 -   Search on Google, Youtube & Wikipedia
+> Search Attention on google
 -   Open Google, Youtube & Whatsapp
+> Open Youtube
 -   Ask a joke
+> Tell me a Joke
+-   Ask for an Insult
+> Insult me
 -   Say after me
+> Say All is well
 
 ## Contributing
 
