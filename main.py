@@ -17,12 +17,12 @@ from pygame import mixer
 mixer.init()
 
 
-def speakmay1(talkie):
+def speak1(talkie):
     spk = Dispatch("SAPI.SpVoice")
-    spk.Speak(f'. . .{talkie}')
+    spk.Speak(f'{talkie}')
 
 
-def speakmay2(talkie):
+def speak2(talkie):
     mytalks = str(talkie)
     language = 'hi'
     myobj = gTTS(text=mytalks, lang=language, tld='co.in', slow=False)
@@ -33,25 +33,25 @@ def speakmay2(talkie):
     os.remove(filename)
 
 
-def speakmay(talkie):
+def speak(talkie):
     try:
-        speakmay1(talkie)
+        speak1(talkie)
     except Exception as e:
-        speakmay2(talkie)
+        speak2(talkie)
 
 
-def wishmemay():
+def wishme():
     nowhr = int(time.strftime("%H", time.localtime()))
 
     if nowhr < 12:
-        speakmay("Good Morning! It's me, May. Have a good day.")
+        speak("Good Morning!")
     elif nowhr >= 12 and nowhr <= 16:
-        speakmay("Good Afternoon!")
+        speak("Good Afternoon!")
     elif nowhr > 16 and nowhr <= 21:
-        speakmay("Good Evening!")
+        speak("Good Evening!")
     else:
-        speakmay("Good Night! Take Care & lots of love.")
-    speakmay("How can I help you!?")
+        speak("Good Night!")
+    speak("How can I help you!?")
 
 
 def listen():
@@ -60,7 +60,6 @@ def listen():
         print("\nSay.<3")
         r.pause_threshold = 1
         audio = r.listen(source, timeout=7, phrase_time_limit=12)
-        # audio = r.listen(source)
 
     try:
         print("Recognising...")
@@ -68,11 +67,11 @@ def listen():
         print(f'\n ~ {usertalks}\n')
         return usertalks
     except Exception as e:
-        if breakingnum >= 10 and mixer.music.get_busy() == 0:
-            print("\nDon't talk to me. Bye.")
-            speakmay("Don't talk to me. Bye.")
+        if breakingnum >= 20 and mixer.music.get_busy() == 0:
+            print("\nShutting Down.")
+            speak("Shutting Down.")
         else:
-            print("Say that again please.")
+            print("Say that again.")
             time.sleep(1)
         return None  # not working as of now
 
@@ -80,90 +79,47 @@ def listen():
 def ytfirsturlreturn(query):
 
     global queuedict
-
     results = requests.get(
         f'https://www.youtube.com/results?search_query={query.replace(" ","+")}').text
 
     resultsIndex = results.index('{"videoId":')
-
     resultsRefined = results[resultsIndex:resultsIndex+3000]
-
     found = re.search(r'{"videoId":"[-.\d\w]+',
                       resultsRefined)[0].split("\"")[3]
-
     foundindex = resultsRefined.index(found)
-
     containingtitle = resultsRefined[foundindex:foundindex+1500]
-
     title = re.findall(r'{"text":"[^"]+"}', containingtitle)[0].split('"')[3]
-
     url = f'https://youtu.be/{found}'
-
     queuedict[url] = title
 
     return url
 
+
 def OpenweatherAPIcalltext():
-	'''Uses Open Weather API to fetch weather data of Bhubaneswar'''
-	import json
-	import requests
+    '''Uses Open Weather API to fetch weather data of Bhubaneswar'''
+    import json
+    import requests
 
-	weatherjson = requests.get("https://api.openweathermap.org/data/2.5/weather?lat=20.292&lon=85.838&units=metric&appid=145c485b75dd3ef3084c53041a74560f")
+    weatherjson = requests.get(
+        "https://api.openweathermap.org/data/2.5/weather?lat=20.292&lon=85.838&units=metric&appid=145c485b75dd3ef3084c53041a74560f")
 
-	textparsed = json.loads(weatherjson.text)
+    textparsed = json.loads(weatherjson.text)
 
-	weather = textparsed['weather'][0]['description']
-	temperature = textparsed['main']['temp']
-	humidity = textparsed['main']['humidity']
-	feels_like = textparsed['main']['feels_like']
-	clouds = textparsed['clouds']['all']
-	wind = textparsed['wind']['speed']
-	name = textparsed['name']
+    weather = textparsed['weather'][0]['description']
+    temperature = textparsed['main']['temp']
+    humidity = textparsed['main']['humidity']
+    feels_like = textparsed['main']['feels_like']
+    clouds = textparsed['clouds']['all']
+    wind = textparsed['wind']['speed']
+    name = textparsed['name']
 
-	openweathercall = f'''The weather is {weather} in {name}. 
+    openweathercall = f'''The weather is {weather} in {name}. 
 	Temperature is {temperature}°C. 
 	Due to {humidity}% humidity, it feels like {feels_like}°C.
 	Cloud Coverage is {clouds}%.
 	And Wind Speed is {wind}m/s.'''
 
-	return openweathercall
-
-
-def musicplay(loop):
-    musicdir = [item for item in os.listdir(
-        r'F:/Anik/My Musics/English musics') if os.path.splitext(item)[1] == ".mp3"]
-    for index, item in enumerate(musicdir, 1):
-        print(f'{index}. {item}')
-    musicwant = int(input("\nWhich song you want to play!?\n"))
-    os.chdir(r'F:/Anik/My Musics/English musics')
-    # mixer.set_num_channels(1)
-    mixer.music.load(musicdir[musicwant-1])
-    mixer.music.fadeout(10000)
-    mixer.music.play(loop)
-
-
-def musicqueue():
-    musicdir = [item for item in os.listdir(
-        r'F:/Anik/My Musics/English musics') if os.path.splitext(item)[1] == ".mp3"]
-    for index, item in enumerate(musicdir, 1):
-        print(f'{index}. {item}')
-    musicwant = int(input("\nWhich song you want to add to queue!?\n"))
-    os.chdir(r'F:/Anik/My Musics/English musics')
-    print(f'Playing {musicdir[musicwant-1].split(".")[0]}')
-    mixer.music.queue(musicdir[musicwant-1])
-
-
-def musicrandomplay(loop):
-    musicdir = [item for item in os.listdir(
-        r'F:/Anik/My Musics/English musics') if os.path.splitext(item)[1] == ".mp3"]
-    os.chdir(r'F:/Anik/My Musics/English musics')
-    # mixer.set_num_channels(1)
-    musicwant = random.randint(0, len(musicdir)-1)
-    print(f'Playing {musicdir[musicwant].split(".")[0]}')
-    speakmay(f'Playing {musicdir[musicwant].split(".")[0]}')
-    mixer.music.load(musicdir[musicwant])
-    # mixer.music.fadeout(10000)
-    mixer.music.play(loop)
+    return openweathercall
 
 
 def ytdlMusicPlay(keyword):
@@ -179,7 +135,6 @@ def ytdlMusicPlay(keyword):
         mixer.music.play()
 
     else:
-        # queue.append(nowid)
         mixer.music.queue(fr'{nowid}.mp3')
 
         print("\nWait for this song to play to add another song to the queue!")
@@ -201,13 +156,12 @@ def quotereturn():
     return [json.loads(quotetext)[0]['q'], json.loads(quotetext)[0]['a']]
 
 
-
 ytdl_format_options = {
     # 'format': 'bestaudio/best',
     'format': 'worstaudio/worst',
     'outtmpl': '%(id)s.%(ext)s',
 
-	'ffmpeg_location':r"ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe",
+    'ffmpeg_location': r"ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe",
 
     'postprocessors': [
         {'key': 'FFmpegExtractAudio'},
@@ -233,7 +187,7 @@ ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 if __name__ == '__main__':
     os.system('cls')
 
-    wishmemay()
+    wishme()
 
     queuedict = {}
 
@@ -243,17 +197,17 @@ if __name__ == '__main__':
             os.system('cls')
             try:
                 say = listen()
-                if say is not None and breakingnum < 10:
+                if say is not None and breakingnum < 20:
                     breakingnum = 0
                     break
                 elif mixer.music.get_busy() == 1:
                     breakingnum = 1
-                elif breakingnum >= 10 and mixer.music.get_busy() == 0:
+                elif breakingnum >= 20 and mixer.music.get_busy() == 0:
                     exit()
                 else:
                     breakingnum += 1
             except Exception as e:
-                speakmay("Speak a bit earlier!")
+                speak("Speak a bit earlier!")
 
         # wants = input("\n\nEnter: ").lower()
         wants = say.lower()
@@ -280,15 +234,12 @@ if __name__ == '__main__':
                         mixer.music.set_volume(int(vol)/10)
                 except Exception as e:
                     print("Please give a value of volume.")
-                    speakmay("Please give a value of volume.")
+                    speak("Please give a value of volume.")
                 finally:
                     continue
-            elif "next" in wants:
-                musicrandomplay(0)
-                continue
 
         if wants == "exit" or 'bye' in wants:
-            speakmay("Bye Bye! Take Care.")
+            speak("Bye Bye! Take Care.")
             break
 
         elif "sleep" in wants and [x for x in wants if x.isnumeric()] != []:
@@ -299,47 +250,24 @@ if __name__ == '__main__':
 
         elif "wikipedia" in wants:
             try:
-                speakmay("Found this from Wikipedia.")
+                speak("Found this from Wikipedia.")
                 # find = wants.split(" ")[0]
                 results = wikipedia.summary(
                     wants.replace("wikipedia", ""), sentences=2)
                 print(results)
-                speakmay(results)
+                speak(results)
 
             except Exception as e:
-                print("Couldn't fetch weather. Try again.")
-
-        elif "music" in wants:
-            if "play" in wants:
-                if mixer.music.get_busy() == 0 and "loop" not in wants and "queue" not in wants and "random" not in wants:
-                    musicplay(0)
-                elif mixer.music.get_busy() == 0 and "loop" in wants and "queue" not in wants and "random" not in wants:
-                    musicplay(-1)
-                elif mixer.music.get_busy() == 0 and "loop" not in wants and "queue" not in wants and "random" in wants:
-                    musicrandomplay(0)
-                elif mixer.music.get_busy() == 0 and "loop" in wants and "queue" not in wants and "random" in wants:
-                    musicrandomplay(-1)
-                else:
-                    if "queue" in wants and "loop" not in wants:
-                        musicqueue()
-                    elif "loop" in wants:
-                        mixer.music.unload()
-                        musicplay(-1)
-                    else:
-                        mixer.music.unload()
-                        musicplay(0)
-
-            elif "resume" in wants:
-                mixer.music.unpause()
+                print("Couldn't fetch information. Try again.")
 
         elif "time" in wants:
             timenow = f'Time is {time.strftime("%I:%M%p",time.localtime())}.'
             print(timenow)
-            speakmay(timenow)
+            speak(timenow)
 
         elif "weather" in wants:
             try:
-                speakmay(OpenweatherAPIcalltext())
+                speak(OpenweatherAPIcalltext())
             except Exception as e:
                 print("Couldn't fetch weather. Try again.")
 
@@ -369,7 +297,7 @@ if __name__ == '__main__':
                 print(f"\nTop {topic.title()} Headlines of Today:\n")
                 for index, item in enumerate(newsreturn(numberofnews, topic), 1):
                     print(f'{index}. {item}')
-                    speakmay(item)
+                    speak(item)
 
             except Exception as e:
                 print("Couldn't get news. Try again.")
@@ -379,7 +307,7 @@ if __name__ == '__main__':
             todaydate = time.strftime("%d %B", time.localtime())
             daydatewish = f'Today is {todayday} and Date is {todaydate}.'
             print(daydatewish)
-            speakmay(daydatewish)
+            speak(daydatewish)
 
         elif "open" in wants:
 
@@ -390,19 +318,18 @@ if __name__ == '__main__':
             elif "whatsapp" in wants:
                 webbrowser.open("https://web.whatsapp.com")
 
-
         elif "play" in wants and "youtube" in wants:
             url = ytfirsturlreturn(wants.replace(
                 "play", "").replace("youtube", "").replace("on", ""))
             print(f"Playing {queuedict[url]} on Youtube")
-            speakmay(f"Playing {queuedict[url]} on Youtube")
+            speak(f"Playing {queuedict[url]} on Youtube")
             webbrowser.open_new_tab(url)
 
         elif "play" in wants:
             keyword = wants.replace("play", "")
-
+            if keyword == "":
+                continue
             print("Please Wait...")
-
             ytdlMusicPlay(keyword)
 
         elif "search" in wants and "google" in wants:
@@ -422,43 +349,45 @@ if __name__ == '__main__':
                 results = wikipedia.summary(keyword, sentences=2)
                 if "==" in results:
                     print(wikipedia.summary(keyword))
-                    speakmay(wikipedia.summary(keyword))
+                    speak(wikipedia.summary(keyword))
                 else:
                     print(results)
-                    speakmay(results)
+                    speak(results)
             except Exception as e:
                 print(e)
 
         elif "joke" in wants:
             try:
-                url = "https://api.yomomma.info/"
+                url = "https://v2.jokeapi.dev/joke/Any"
                 joketext = requests.get(url)
                 jokejson = json.loads(joketext.text)
-                speakmay(jokejson['joke'])
+                print(jokejson['joke'])
+                speak(jokejson['joke'])
             except Exception as e:
-                print("Couldn't get joke. Cause your life's a joke.")
+                print("Couldn't get joke. Try again.")
 
         elif "insult me" in wants:
             try:
                 url = "https://evilinsult.com/generate_insult.php"
                 insulttext = requests.get(url).text
-                speakmay(insulttext)
+                print(insulttext)
+                speak(insulttext)
             except Exception as e:
-                print("Couldn't get Insult. Cause your life's a joke.")
+                print("Couldn't get Insult. Try again.")
 
         elif "quote" in wants:
             try:
                 quote = quotereturn()[0]
                 author = quotereturn()[1]
                 print(quote, "  -", author)
-                speakmay(quote)
+                speak(quote)
             except Exception as e:
                 print("Couldn't get quote. Try again.")
 
         elif "say" in wants[0:4] or "speak" in wants[0:6]:
-            speakmay(wants.replace("say", "").replace("speak", ""))
+            speak(wants.replace("say", "").replace("speak", ""))
 
         else:
-            speakmay("Sorry, I can't help with this.")
+            speak("Sorry, I can't help with this.")
 
         time.sleep(2)
