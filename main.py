@@ -1,11 +1,8 @@
 from gtts import gTTS
-import threading
-import random
 import re
 import json
 import requests
 import os
-import pafy
 import webbrowser
 import wikipedia
 import youtube_dl
